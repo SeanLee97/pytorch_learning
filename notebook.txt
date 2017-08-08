@@ -1,0 +1,79 @@
+pytorch 常用函数总结
+
+
+torch.mm()
+@description
+实现了张量相乘，类似numpy的np.dot()
+
+torch.t()
+@description
+实现了张量的转置，类似numpy的np.T或np.transpose()
+
+torch.clamp(min=x, max=y)
+@description
+将张量的值控制在[x,y]范围内
+
+torch.squeeze(input, dim=None, out=None)
+@description
+压缩维度
+Returns a Tensor with all the dimensions of input of size 1 removed.
+If input is of shape: (Ax1xBxCx1xD)
+then the out Tensor will be of shape: (AxBxCxD)
+When dim is given, a squeeze operation is done only in the given dimension. If input is of shape: (Ax1xB)
+, squeeze(input, 0) leaves the Tensor unchanged, but squeeze(input, 1) will squeeze the tensor to the shape (AxB).
+@example
+>>> x = torch.zeros(2,1,2,1,2)
+>>> x.size()
+(2L, 1L, 2L, 1L, 2L)
+>>> y = torch.squeeze(x)
+>>> y.size()
+(2L, 2L, 2L)
+>>> y = torch.squeeze(x, 0)
+>>> y.size()
+(2L, 1L, 2L, 1L, 2L)
+>>> y = torch.squeeze(x, 1)
+>>> y.size()
+(2L, 2L, 1L, 2L)
+
+torch.view()
+@description
+改变shape，类似numpy的reshape
+@example
+>>> x = torch.randn(4, 4)
+>>> x.size()
+torch.Size([4, 4])
+>>> y = x.view(16)
+>>> y.size()
+torch.Size([16])
+>>> z = x.view(-1, 8)  # the size -1 is inferred from other dimensions
+>>> z.size()
+torch.Size([2, 8])
+
+torch.nn.Linear(in_features, out_features, bias=True)
+@description
+实现y = Ax + b = wx (w为A和b组成的向量)
+@param
+in_features 输入特征数
+out_features 输出特征数
+要求输入x的shape为(N, in_features)
+此时输出y的shape为(N, out_features)
+@example
+m = nn.Linear(20, 30)  
+input = autograd.Variable(torch.randn(128, 20))
+output = m(input) # shape变化: x(128, 20) * w(20, 30) -> y(128, 30)
+
+torch.nn.MSELoss()
+@description
+求均方误差
+@example
+loss = nn.MSELoss()
+input = autograd.Variable(torch.randn(3, 5), requires_grad=True)
+target = autograd.Variable(torch.randn(3, 5)) # 注意MSELoss的target张量requires_grad=False
+output = loss(input, target)
+output.backward()
+
+torch.torch.optim.SGD(params, lr=<object object>, momentum=0, dampening=0, weight_decay=0, nesterov=False)
+@description
+随机梯度下降
+
+
